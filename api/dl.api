@@ -1,0 +1,64 @@
+syntax = "v1"
+
+info (
+	title: "深度学习微服务"
+	desc: "深度学习微服务"
+	author: "kongfuguagua"
+	email: "hanmengqi@sjtu.edu.cn"
+)
+
+type (
+	DL {
+		Metadata DLMetadata `json:"metadata"`
+		Spec     DLSpec     `json:"spec"`
+	}
+	DLMetadata {
+		Id      string `json:"id"`
+		Builder string `json:"builder"`
+		DLName  string `json:"dlname"`
+	}
+	DLSpec {
+		Model  DLModel  `json:"dlmodel"`
+		Data   []DLData `json:"dldata"`
+		Laster DLData   `json:"laster"`
+	}
+	DLModel {
+		Name       string `json:"dlmodelname"`
+		Path       string `json:"dlmodelpath"`
+		Status     bool   `json:"dlmodelstatus"` //模型是否可用
+		InputType  string `json:"dlinput"`
+		OutputType string `json:"dloutput"`
+	}
+	DLData {
+		Index  string `json:"dataindex"`
+		Status bool   `json:"datastatus"` //该数据是否可用
+		Deal   string `json:"datadeal"`   //该数据结束到哪个流程了，后面这个要变成枚举
+		Type   string `json:"datatype"`
+	}
+)
+
+type (
+	DLGetRequest {
+		Id string `json:"id"`
+	}
+	DLGetResponse {
+		DL DL `json:"DL"`
+	}
+)
+
+type (
+	DLCreateRequest {
+		Spec DLSpec `json:"spec"`
+	}
+	DLCreateResponse {
+		Metadata DLMetadata `json:"metadata"`
+	}
+)
+
+service dl-api {
+	@handler GetDLHandler // TODO: set handler name and delete this comment
+	get /dl/api/get (DLGetRequest) returns(DLGetResponse)
+	
+	@handler CreateDLHandler // TODO: set handler name and delete this comment
+	post /dl/api/create (DLCreateRequest) returns (DLCreateResponse)
+}
