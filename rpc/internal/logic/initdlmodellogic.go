@@ -24,7 +24,7 @@ func NewInitDLModelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitD
 }
 
 func (l *InitDLModelLogic) InitDLModel(in *dl.SetDLModelRequest) (*dl.DLModel, error) {
-	// todo: add your logic here and delete this line
+	// todo: 这里大概要做校验model是否可用，并获取信息
 
 	return &dl.DLModel{}, nil
 }

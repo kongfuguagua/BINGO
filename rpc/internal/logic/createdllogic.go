@@ -6,6 +6,7 @@ import (
 	"dl/rpc/dl"
 	"dl/rpc/internal/svc"
 
+	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
 )
 
@@ -23,8 +24,24 @@ func NewCreateDLLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateDL
 	}
 }
 
-func (l *CreateDLLogic) CreateDL(in *dl.DLCreateRequest) (*dl.DLCreateResponse, error) {
-	// todo: add your logic here and delete this line
-
-	return &dl.DLCreateResponse{}, nil
+func (l *CreateDLLogic) CreateDL(in *dl.DLCreateRequest) (*dl.DLCreateResponse, error) { //api调这个，然后rpc返回后，api会保存这个到数据库
+	DLModel := dl.DLModel{
+		Name:       in.Spec.ModelName,
+		Path:       "",
+		Status:     false,
+		InputType:  "",
+		OutputType: "",
+	}
+	DLDataOBJ := dl.DLDataOBJ{
+		Status: false,
+	}
+	DLSpec := dl.DLSpec{Model: &DLModel, DataObj: &DLDataOBJ}
+	DLId := uuid.New().String()
+	DLMetadata := dl.DLMetadata{
+		Namespace: in.Spec.Namespace,
+		Id:        DLId,
+		DLName:    in.Spec.DLName,
+	}
+	DlApp := &dl.DLapp{Metadata: &DLMetadata, Spec: &DLSpec}
+	return &dl.DLCreateResponse{DlApp: DlApp}, nil
 }

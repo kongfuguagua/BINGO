@@ -8,8 +8,8 @@ Etcd:
   Key: dl.rpc
 
 
-DataSource: root:Iwin-1-321@tcp(localhost:3306)/gozero 
-# mysql链接地址，满足 $user:$password@tcp($ip:$port)/$db?$queries 格式即可
-Table: book
-Cache:
-  - Host: localhost:6379
+# DataSource: root:Iwin-1-321@tcp(localhost:3306)/gozero 
+# # mysql链接地址，满足 $user:$password@tcp($ip:$port)/$db?$queries 格式即可
+# Table: book
+# Cache:
+#   - Host: localhost:6379

@@ -13,9 +13,9 @@ type (
 		Spec     DLSpec     `json:"spec"`
 	}
 	DLMetadata {
-		Id      string `json:"id"`
-		Builder string `json:"builder"`
-		DLName  string `json:"dlname"`
+		Id        string `json:"id"`
+		Namespace string `json:"namespace"`
+		DLName    string `json:"dlname"`
 	}
 	DLSpec {
 		Model DLModel   `json:"dlmodel"`

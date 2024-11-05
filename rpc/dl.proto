@@ -60,7 +60,7 @@ message DLCreateRequest {
 }
 
 message DLCreateResponse {
-    DLMetadata metadata = 1;
+    DLapp dlApp = 1;
 }
 
 message setDLModelRequest{

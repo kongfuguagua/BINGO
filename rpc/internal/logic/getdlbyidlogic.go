@@ -24,7 +24,7 @@ func NewGetDLByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDLBy
 }
 
 func (l *GetDLByIdLogic) GetDLById(in *dl.DLGetRequestById) (*dl.DLGetResponseById, error) {
-	// todo: add your logic here and delete this line
+	// todo: 这里大概要做数据库操作，通过id查spec
 
 	return &dl.DLGetResponseById{}, nil
 }

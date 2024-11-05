@@ -24,7 +24,7 @@ func NewInitDLDataLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitDL
 }
 
 func (l *InitDLDataLogic) InitDLData(in *dl.SetDLDataRequest) (*dl.DLDataOBJ, error) {
-	// todo: add your logic here and delete this line
+	// todo: 这里大概要做校验数据对象是否可靠
 
 	return &dl.DLDataOBJ{}, nil
 }
