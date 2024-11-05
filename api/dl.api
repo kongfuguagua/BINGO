@@ -8,7 +8,7 @@ info (
 )
 
 type (
-	DL {
+	DLApp {
 		Metadata DLMetadata `json:"metadata"`
 		Spec     DLSpec     `json:"spec"`
 	}
@@ -18,9 +18,8 @@ type (
 		DLName  string `json:"dlname"`
 	}
 	DLSpec {
-		Model  DLModel  `json:"dlmodel"`
-		Data   []DLData `json:"dldata"`
-		Laster DLData   `json:"laster"`
+		Model DLModel   `json:"dlmodel"`
+		Data  DLDataOBJ `json:"dldataobj"`
 	}
 	DLModel {
 		Name       string `json:"dlmodelname"`
@@ -29,11 +28,19 @@ type (
 		InputType  string `json:"dlinput"`
 		OutputType string `json:"dloutput"`
 	}
+
+	DLDataOBJ {
+		Database string `json:"database,omitempty"`
+		Name     string `json:"name,omitempty"`
+		Status   bool   `json:"status,omitempty"` // 该数据对象是否可用
+		Total    int64  `json:"total,omitempty"`
+		Type     string `json:"type,omitempty"`
+	}
+
 	DLData {
-		Index  string `json:"dataindex"`
-		Status bool   `json:"datastatus"` //该数据是否可用
-		Deal   string `json:"datadeal"`   //该数据结束到哪个流程了，后面这个要变成枚举
-		Type   string `json:"datatype"`
+		Index  string `json:"index,omitempty"`
+		Status bool   `json:"status,omitempty"` // 该数据是否可用
+		Deal   string `json:"deal,omitempty"`   // 该数据结束到哪个流程了，后面这个要变成枚举
 	}
 )
 
@@ -42,7 +49,7 @@ type (
 		Id string `json:"id"`
 	}
 	DLGetResponse {
-		DL DL `json:"DL"`
+		DL DLApp `json:"DL"`
 	}
 )
 
