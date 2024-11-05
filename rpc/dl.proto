@@ -1,0 +1,80 @@
+syntax = "proto3";
+
+package dl;
+option go_package="./dl";
+
+message DLapp {
+    DLMetadata metadata = 1;
+    DLSpec spec = 2;
+}
+
+message DLMetadata {
+    string id = 1;
+    string Namespace = 2;
+    string DLName = 3;
+}
+
+message DLSpec {
+    DLModel model = 1;
+    DLDataOBJ dataObj = 2;
+}
+
+message DLCreateSpec {
+    string Namespace=1;
+    string DLName=2;
+    string modelName=3;
+}
+
+message DLModel {
+    string name = 1;
+    string path = 2;
+    bool status = 3; // 模型是否可用
+    string inputType = 4;
+    string outputType = 5;
+}
+
+message DLDataOBJ{
+    string Database=1;
+    string name=2;
+    bool status = 3; // 该数据对象是否可用
+    int64 total=4;
+    string type = 5;
+}
+
+message DLData {
+    string index = 1;
+    bool status = 2; // 该数据是否可用
+    string deal = 3; // 该数据结束到哪个流程了，后面这个要变成枚举
+}
+
+message DLGetRequestById {
+    string id = 1;
+}
+
+message DLGetResponseById {
+    DLapp dlApp = 1;
+}
+
+message DLCreateRequest {
+    DLCreateSpec spec = 1;
+}
+
+message DLCreateResponse {
+    DLMetadata metadata = 1;
+}
+
+message setDLModelRequest{
+    string path = 1;
+}
+
+message setDLDataRequest{
+    string Database=1;
+}
+
+service DLfunction {
+    rpc getDLById (DLGetRequestById) returns (DLGetResponseById);
+    rpc createDL (DLCreateRequest) returns (DLCreateResponse);
+    rpc initDL (DLapp) returns (DLapp);
+    rpc initDLModel (setDLModelRequest) returns (DLModel);
+    rpc initDLData (setDLDataRequest) returns (DLDataOBJ);
+}
