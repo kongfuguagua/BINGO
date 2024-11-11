@@ -25,10 +25,31 @@ func NewCreateDLLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateDL
 }
 
 func (l *CreateDLLogic) CreateDL(req *types.DLCreateRequest) (resp *types.DLCreateResponse, err error) {
-	in := &dlfunction.DLCreateRequest{
-		Spec: &req.Spec,
+	spec := &dlfunction.DLCreateSpec{
+		Namespace: req.Namespace,
+		DLName:    req.DLName,
+		ModelName: req.Spec.Model.Name,
 	}
-	l.svcCtx.DLApp.CreateDL(l.ctx, in)
-
-	return
+	in := &dlfunction.DLCreateRequest{
+		Spec: spec,
+	}
+	dlinfo, err := l.svcCtx.DLcreate.CreateDL(l.ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	out := &types.DLCreateResponse{
+		DLInfo: types.DLApp{
+			Metadata: types.DLMetadata{
+				Id:        dlinfo.DlApp.Metadata.Id,
+				Namespace: dlinfo.DlApp.Metadata.Namespace,
+				DLName:    dlinfo.DlApp.Metadata.Namespace,
+			},
+			Spec: types.DLSpec{
+				Model: types.DLModel{
+					Name: dlinfo.DlApp.Spec.Model.Name,
+				},
+			},
+		},
+	}
+	return out, nil
 }

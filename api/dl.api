@@ -19,14 +19,14 @@ type (
 	}
 	DLSpec {
 		Model DLModel   `json:"dlmodel"`
-		Data  DLDataOBJ `json:"dldataobj"`
+		Data  DLDataOBJ `json:"dldataobj,omitempty"`
 	}
 	DLModel {
 		Name       string `json:"dlmodelname"`
-		Path       string `json:"dlmodelpath"`
-		Status     bool   `json:"dlmodelstatus"` //模型是否可用
-		InputType  string `json:"dlinput"`
-		OutputType string `json:"dloutput"`
+		Path       string `json:"dlmodelpath,omitempty"`
+		Status     bool   `json:"dlmodelstatus,omitempty"` //模型是否可用
+		InputType  string `json:"dlinput,omitempty"`
+		OutputType string `json:"dloutput,omitempty"`
 	}
 
 	DLDataOBJ {
@@ -55,10 +55,12 @@ type (
 
 type (
 	DLCreateRequest {
-		Spec DLSpec `json:"spec"`
+		Namespace string `json:"namespace"`
+		DLName    string `json:"dlname"`
+		Spec      DLSpec `json:"spec"`
 	}
 	DLCreateResponse {
-		Metadata DLMetadata `json:"metadata"`
+		DLInfo DLApp `json:"dlinfo"`
 	}
 )
 

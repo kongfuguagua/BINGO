@@ -8,13 +8,13 @@ import (
 )
 
 type ServiceContext struct {
-	Config config.Config
-	DLApp  dlfunction.DLfunction
+	Config   config.Config
+	DLcreate dlfunction.DLfunction
 }
 
 func NewServiceContext(c config.Config) *ServiceContext {
 	return &ServiceContext{
-		Config: c,
-		DLApp:  dlfunction.NewDLfunction(zrpc.MustNewClient(c.DLApp)),
+		Config:   c,
+		DLcreate: dlfunction.NewDLfunction(zrpc.MustNewClient(c.DLApp)),
 	}
 }

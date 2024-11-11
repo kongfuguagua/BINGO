@@ -48,9 +48,11 @@ type DLGetResponse struct {
 }
 
 type DLCreateRequest struct {
-	Spec DLSpec `json:"spec"`
+	Namespace string `json:"namespace"`
+	DLName    string `json:"dlname"`
+	Spec      DLSpec `json:"spec"`
 }
 
 type DLCreateResponse struct {
-	Metadata DLMetadata `json:"metadata"`
+	DLInfo DLApp `json:"dlinfo"`
 }
