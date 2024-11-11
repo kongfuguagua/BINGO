@@ -7,5 +7,6 @@ import (
 
 type Config struct {
 	rest.RestConf
-	DLApp zrpc.RpcClientConf
+	DLApp   zrpc.RpcClientConf
+	DLModel zrpc.RpcClientConf
 }

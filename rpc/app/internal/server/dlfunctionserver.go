@@ -6,9 +6,9 @@ package server
 import (
 	"context"
 
-	"dl/rpc/dl"
-	"dl/rpc/internal/logic"
-	"dl/rpc/internal/svc"
+	"dl/rpc/app/dl"
+	"dl/rpc/app/internal/logic"
+	"dl/rpc/app/internal/svc"
 )
 
 type DLfunctionServer struct {
@@ -35,14 +35,4 @@ func (s *DLfunctionServer) CreateDL(ctx context.Context, in *dl.DLCreateRequest)
 func (s *DLfunctionServer) InitDL(ctx context.Context, in *dl.DLapp) (*dl.DLapp, error) {
 	l := logic.NewInitDLLogic(ctx, s.svcCtx)
 	return l.InitDL(in)
-}
-
-func (s *DLfunctionServer) InitDLModel(ctx context.Context, in *dl.SetDLModelRequest) (*dl.DLModel, error) {
-	l := logic.NewInitDLModelLogic(ctx, s.svcCtx)
-	return l.InitDLModel(in)
-}
-
-func (s *DLfunctionServer) InitDLData(ctx context.Context, in *dl.SetDLDataRequest) (*dl.DLDataOBJ, error) {
-	l := logic.NewInitDLDataLogic(ctx, s.svcCtx)
-	return l.InitDLData(in)
 }

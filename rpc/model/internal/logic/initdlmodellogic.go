@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"dl/rpc/dl"
-	"dl/rpc/internal/svc"
+	"dl/rpc/model/internal/svc"
+	"dl/rpc/model/modeler"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewInitDLModelLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitD
 	}
 }
 
-func (l *InitDLModelLogic) InitDLModel(in *dl.SetDLModelRequest) (*dl.DLModel, error) {
-	// todo: 这里大概要做校验model是否可用，并获取信息
+func (l *InitDLModelLogic) InitDLModel(in *modeler.SetDLModelRequest) (*modeler.DLModel, error) {
+	// todo: add your logic here and delete this line
 
-	return &dl.DLModel{}, nil
+	return &modeler.DLModel{}, nil
 }

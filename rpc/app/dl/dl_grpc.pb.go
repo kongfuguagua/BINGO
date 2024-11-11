@@ -19,11 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	DLfunction_GetDLById_FullMethodName   = "/dl.DLfunction/getDLById"
-	DLfunction_CreateDL_FullMethodName    = "/dl.DLfunction/createDL"
-	DLfunction_InitDL_FullMethodName      = "/dl.DLfunction/initDL"
-	DLfunction_InitDLModel_FullMethodName = "/dl.DLfunction/initDLModel"
-	DLfunction_InitDLData_FullMethodName  = "/dl.DLfunction/initDLData"
+	DLfunction_GetDLById_FullMethodName = "/dl.DLfunction/getDLById"
+	DLfunction_CreateDL_FullMethodName  = "/dl.DLfunction/createDL"
+	DLfunction_InitDL_FullMethodName    = "/dl.DLfunction/initDL"
 )
 
 // DLfunctionClient is the client API for DLfunction service.
@@ -33,8 +31,6 @@ type DLfunctionClient interface {
 	GetDLById(ctx context.Context, in *DLGetRequestById, opts ...grpc.CallOption) (*DLGetResponseById, error)
 	CreateDL(ctx context.Context, in *DLCreateRequest, opts ...grpc.CallOption) (*DLCreateResponse, error)
 	InitDL(ctx context.Context, in *DLapp, opts ...grpc.CallOption) (*DLapp, error)
-	InitDLModel(ctx context.Context, in *SetDLModelRequest, opts ...grpc.CallOption) (*DLModel, error)
-	InitDLData(ctx context.Context, in *SetDLDataRequest, opts ...grpc.CallOption) (*DLDataOBJ, error)
 }
 
 type dLfunctionClient struct {
@@ -75,26 +71,6 @@ func (c *dLfunctionClient) InitDL(ctx context.Context, in *DLapp, opts ...grpc.C
 	return out, nil
 }
 
-func (c *dLfunctionClient) InitDLModel(ctx context.Context, in *SetDLModelRequest, opts ...grpc.CallOption) (*DLModel, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DLModel)
-	err := c.cc.Invoke(ctx, DLfunction_InitDLModel_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *dLfunctionClient) InitDLData(ctx context.Context, in *SetDLDataRequest, opts ...grpc.CallOption) (*DLDataOBJ, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(DLDataOBJ)
-	err := c.cc.Invoke(ctx, DLfunction_InitDLData_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
 // DLfunctionServer is the server API for DLfunction service.
 // All implementations must embed UnimplementedDLfunctionServer
 // for forward compatibility.
@@ -102,8 +78,6 @@ type DLfunctionServer interface {
 	GetDLById(context.Context, *DLGetRequestById) (*DLGetResponseById, error)
 	CreateDL(context.Context, *DLCreateRequest) (*DLCreateResponse, error)
 	InitDL(context.Context, *DLapp) (*DLapp, error)
-	InitDLModel(context.Context, *SetDLModelRequest) (*DLModel, error)
-	InitDLData(context.Context, *SetDLDataRequest) (*DLDataOBJ, error)
 	mustEmbedUnimplementedDLfunctionServer()
 }
 
@@ -122,12 +96,6 @@ func (UnimplementedDLfunctionServer) CreateDL(context.Context, *DLCreateRequest)
 }
 func (UnimplementedDLfunctionServer) InitDL(context.Context, *DLapp) (*DLapp, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method InitDL not implemented")
-}
-func (UnimplementedDLfunctionServer) InitDLModel(context.Context, *SetDLModelRequest) (*DLModel, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InitDLModel not implemented")
-}
-func (UnimplementedDLfunctionServer) InitDLData(context.Context, *SetDLDataRequest) (*DLDataOBJ, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method InitDLData not implemented")
 }
 func (UnimplementedDLfunctionServer) mustEmbedUnimplementedDLfunctionServer() {}
 func (UnimplementedDLfunctionServer) testEmbeddedByValue()                    {}
@@ -204,42 +172,6 @@ func _DLfunction_InitDL_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
-func _DLfunction_InitDLModel_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetDLModelRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DLfunctionServer).InitDLModel(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DLfunction_InitDLModel_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DLfunctionServer).InitDLModel(ctx, req.(*SetDLModelRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _DLfunction_InitDLData_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SetDLDataRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(DLfunctionServer).InitDLData(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: DLfunction_InitDLData_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(DLfunctionServer).InitDLData(ctx, req.(*SetDLDataRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
 // DLfunction_ServiceDesc is the grpc.ServiceDesc for DLfunction service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -258,14 +190,6 @@ var DLfunction_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "initDL",
 			Handler:    _DLfunction_InitDL_Handler,
-		},
-		{
-			MethodName: "initDLModel",
-			Handler:    _DLfunction_InitDLModel_Handler,
-		},
-		{
-			MethodName: "initDLData",
-			Handler:    _DLfunction_InitDLData_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

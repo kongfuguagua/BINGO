@@ -6,7 +6,7 @@ package dlfunction
 import (
 	"context"
 
-	"dl/rpc/dl"
+	"dl/rpc/app/dl"
 
 	"github.com/zeromicro/go-zero/zrpc"
 	"google.golang.org/grpc"
@@ -31,8 +31,6 @@ type (
 		GetDLById(ctx context.Context, in *DLGetRequestById, opts ...grpc.CallOption) (*DLGetResponseById, error)
 		CreateDL(ctx context.Context, in *DLCreateRequest, opts ...grpc.CallOption) (*DLCreateResponse, error)
 		InitDL(ctx context.Context, in *DLapp, opts ...grpc.CallOption) (*DLapp, error)
-		InitDLModel(ctx context.Context, in *SetDLModelRequest, opts ...grpc.CallOption) (*DLModel, error)
-		InitDLData(ctx context.Context, in *SetDLDataRequest, opts ...grpc.CallOption) (*DLDataOBJ, error)
 	}
 
 	defaultDLfunction struct {
@@ -59,14 +57,4 @@ func (m *defaultDLfunction) CreateDL(ctx context.Context, in *DLCreateRequest, o
 func (m *defaultDLfunction) InitDL(ctx context.Context, in *DLapp, opts ...grpc.CallOption) (*DLapp, error) {
 	client := dl.NewDLfunctionClient(m.cli.Conn())
 	return client.InitDL(ctx, in, opts...)
-}
-
-func (m *defaultDLfunction) InitDLModel(ctx context.Context, in *SetDLModelRequest, opts ...grpc.CallOption) (*DLModel, error) {
-	client := dl.NewDLfunctionClient(m.cli.Conn())
-	return client.InitDLModel(ctx, in, opts...)
-}
-
-func (m *defaultDLfunction) InitDLData(ctx context.Context, in *SetDLDataRequest, opts ...grpc.CallOption) (*DLDataOBJ, error) {
-	client := dl.NewDLfunctionClient(m.cli.Conn())
-	return client.InitDLData(ctx, in, opts...)
 }

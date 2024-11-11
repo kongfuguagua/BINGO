@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"dl/rpc/dl"
-	"dl/rpc/internal/svc"
+	"dl/rpc/app/dl"
+	"dl/rpc/app/internal/svc"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -24,7 +24,7 @@ func NewGetDLByIdLogic(ctx context.Context, svcCtx *svc.ServiceContext) *GetDLBy
 }
 
 func (l *GetDLByIdLogic) GetDLById(in *dl.DLGetRequestById) (*dl.DLGetResponseById, error) {
-	// todo: 这里大概要做数据库操作，通过id查spec
+	// todo: add your logic here and delete this line
 
 	return &dl.DLGetResponseById{}, nil
 }

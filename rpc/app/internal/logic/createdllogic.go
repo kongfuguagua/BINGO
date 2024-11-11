@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"dl/rpc/dl"
-	"dl/rpc/internal/svc"
+	"dl/rpc/app/dl"
+	"dl/rpc/app/internal/svc"
 
 	"github.com/google/uuid"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -24,7 +24,7 @@ func NewCreateDLLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateDL
 	}
 }
 
-func (l *CreateDLLogic) CreateDL(in *dl.DLCreateRequest) (*dl.DLCreateResponse, error) { //api调这个，然后rpc返回后，api会保存这个到数据库
+func (l *CreateDLLogic) CreateDL(in *dl.DLCreateRequest) (*dl.DLCreateResponse, error) {
 	DLModel := dl.DLModel{
 		Name:       in.Spec.ModelName,
 		Path:       "",

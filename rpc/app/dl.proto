@@ -75,6 +75,6 @@ service DLfunction {
     rpc getDLById (DLGetRequestById) returns (DLGetResponseById);
     rpc createDL (DLCreateRequest) returns (DLCreateResponse);
     rpc initDL (DLapp) returns (DLapp);
-    rpc initDLModel (setDLModelRequest) returns (DLModel);
-    rpc initDLData (setDLDataRequest) returns (DLDataOBJ);
 }
+
+

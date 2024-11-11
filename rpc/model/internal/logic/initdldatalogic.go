@@ -3,8 +3,8 @@ package logic
 import (
 	"context"
 
-	"dl/rpc/dl"
-	"dl/rpc/internal/svc"
+	"dl/rpc/model/internal/svc"
+	"dl/rpc/model/modeler"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -23,8 +23,8 @@ func NewInitDLDataLogic(ctx context.Context, svcCtx *svc.ServiceContext) *InitDL
 	}
 }
 
-func (l *InitDLDataLogic) InitDLData(in *dl.SetDLDataRequest) (*dl.DLDataOBJ, error) {
-	// todo: 这里大概要做校验数据对象是否可靠
+func (l *InitDLDataLogic) InitDLData(in *modeler.SetDLDataRequest) (*modeler.DLDataOBJ, error) {
+	// todo: add your logic here and delete this line
 
-	return &dl.DLDataOBJ{}, nil
+	return &modeler.DLDataOBJ{}, nil
 }

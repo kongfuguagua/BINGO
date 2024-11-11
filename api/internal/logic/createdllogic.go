@@ -5,7 +5,8 @@ import (
 
 	"dl/api/internal/svc"
 	"dl/api/internal/types"
-	"dl/rpc/dlfunction"
+	"dl/rpc/app/dlfunction"
+	"dl/rpc/model/dlmodeler"
 
 	"github.com/zeromicro/go-zero/core/logx"
 )
@@ -33,10 +34,11 @@ func (l *CreateDLLogic) CreateDL(req *types.DLCreateRequest) (resp *types.DLCrea
 	in := &dlfunction.DLCreateRequest{
 		Spec: spec,
 	}
-	dlinfo, err := l.svcCtx.DLcreate.CreateDL(l.ctx, in)
+	dlinfo, err := l.svcCtx.DLclient.CreateDL(l.ctx, in)
 	if err != nil {
 		return nil, err
 	}
+	dlmodel, err := l.svcCtx.DLmodeler.InitDLModel(l.ctx, &dlmodeler.SetDLModelRequest{Path: dlinfo.DlApp.Spec.Model.Path})
 	out := &types.DLCreateResponse{
 		DLInfo: types.DLApp{
 			Metadata: types.DLMetadata{
@@ -46,7 +48,11 @@ func (l *CreateDLLogic) CreateDL(req *types.DLCreateRequest) (resp *types.DLCrea
 			},
 			Spec: types.DLSpec{
 				Model: types.DLModel{
-					Name: dlinfo.DlApp.Spec.Model.Name,
+					Name:       dlinfo.DlApp.Spec.Model.Name,
+					Path:       dlmodel.Path,
+					Status:     dlmodel.Status,
+					InputType:  dlmodel.InputType,
+					OutputType: dlmodel.OutputType,
 				},
 			},
 		},
