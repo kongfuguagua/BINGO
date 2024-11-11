@@ -3,7 +3,7 @@
 import grpc
 import warnings
 
-import dl_pb2 as dl__pb2
+import model_pb2 as model__pb2
 
 GRPC_GENERATED_VERSION = '1.67.1'
 GRPC_VERSION = grpc.__version__
@@ -18,14 +18,14 @@ except ImportError:
 if _version_not_supported:
     raise RuntimeError(
         f'The grpc package installed is at version {GRPC_VERSION},'
-        + f' but the generated code in dl_pb2_grpc.py depends on'
+        + f' but the generated code in model_pb2_grpc.py depends on'
         + f' grpcio>={GRPC_GENERATED_VERSION}.'
         + f' Please upgrade your grpc module to grpcio>={GRPC_GENERATED_VERSION}'
         + f' or downgrade your generated code using grpcio-tools<={GRPC_VERSION}.'
     )
 
 
-class DLfunctionStub(object):
+class DLModelerStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -35,18 +35,18 @@ class DLfunctionStub(object):
             channel: A grpc.Channel.
         """
         self.initDLModel = channel.unary_unary(
-                '/mnist.DLfunction/initDLModel',
-                request_serializer=dl__pb2.setDLModelRequest.SerializeToString,
-                response_deserializer=dl__pb2.DLModel.FromString,
+                '/modeler.DLModeler/initDLModel',
+                request_serializer=model__pb2.setDLModelRequest.SerializeToString,
+                response_deserializer=model__pb2.DLModel.FromString,
                 _registered_method=True)
         self.initDLData = channel.unary_unary(
-                '/mnist.DLfunction/initDLData',
-                request_serializer=dl__pb2.setDLDataRequest.SerializeToString,
-                response_deserializer=dl__pb2.DLDataOBJ.FromString,
+                '/modeler.DLModeler/initDLData',
+                request_serializer=model__pb2.setDLDataRequest.SerializeToString,
+                response_deserializer=model__pb2.DLDataOBJ.FromString,
                 _registered_method=True)
 
 
-class DLfunctionServicer(object):
+class DLModelerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
     def initDLModel(self, request, context):
@@ -62,27 +62,27 @@ class DLfunctionServicer(object):
         raise NotImplementedError('Method not implemented!')
 
 
-def add_DLfunctionServicer_to_server(servicer, server):
+def add_DLModelerServicer_to_server(servicer, server):
     rpc_method_handlers = {
             'initDLModel': grpc.unary_unary_rpc_method_handler(
                     servicer.initDLModel,
-                    request_deserializer=dl__pb2.setDLModelRequest.FromString,
-                    response_serializer=dl__pb2.DLModel.SerializeToString,
+                    request_deserializer=model__pb2.setDLModelRequest.FromString,
+                    response_serializer=model__pb2.DLModel.SerializeToString,
             ),
             'initDLData': grpc.unary_unary_rpc_method_handler(
                     servicer.initDLData,
-                    request_deserializer=dl__pb2.setDLDataRequest.FromString,
-                    response_serializer=dl__pb2.DLDataOBJ.SerializeToString,
+                    request_deserializer=model__pb2.setDLDataRequest.FromString,
+                    response_serializer=model__pb2.DLDataOBJ.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'mnist.DLfunction', rpc_method_handlers)
+            'modeler.DLModeler', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('mnist.DLfunction', rpc_method_handlers)
+    server.add_registered_method_handlers('modeler.DLModeler', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
-class DLfunction(object):
+class DLModeler(object):
     """Missing associated documentation comment in .proto file."""
 
     @staticmethod
@@ -99,9 +99,9 @@ class DLfunction(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/mnist.DLfunction/initDLModel',
-            dl__pb2.setDLModelRequest.SerializeToString,
-            dl__pb2.DLModel.FromString,
+            '/modeler.DLModeler/initDLModel',
+            model__pb2.setDLModelRequest.SerializeToString,
+            model__pb2.DLModel.FromString,
             options,
             channel_credentials,
             insecure,
@@ -126,9 +126,9 @@ class DLfunction(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/mnist.DLfunction/initDLData',
-            dl__pb2.setDLDataRequest.SerializeToString,
-            dl__pb2.DLDataOBJ.FromString,
+            '/modeler.DLModeler/initDLData',
+            model__pb2.setDLDataRequest.SerializeToString,
+            model__pb2.DLDataOBJ.FromString,
             options,
             channel_credentials,
             insecure,

@@ -1,6 +1,7 @@
 syntax = "proto3";
 
-package mnist;
+package modeler;
+option go_package="./modeler";
 
 message DLModel {
     string name = 1;
@@ -32,7 +33,7 @@ message setDLDataRequest{
     string Database=1;
 }
 
-service DLfunction {
+service DLModeler {
     rpc initDLModel (setDLModelRequest) returns (DLModel);
     rpc initDLData (setDLDataRequest) returns (DLDataOBJ);
 }

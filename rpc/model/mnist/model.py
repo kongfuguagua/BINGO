@@ -1,13 +1,13 @@
 from concurrent import futures
 import grpc
-import mnist_pb2
-import mnist_pb2_grpc
+import model_pb2
+import model_pb2_grpc
 import torch
 
 # 假设我们有一个字典来存储加载的模型
 loaded_models = {}
 
-class DLfunctionServicer(mnist_pb2_grpc.DLfunctionServicer):
+class DLModelerServicer(model_pb2_grpc.DLModelerServicer):
     def initDLModel(self, request, context):
         model_path = request.path
 
@@ -39,7 +39,7 @@ class DLfunctionServicer(mnist_pb2_grpc.DLfunctionServicer):
             output_dim = "N/A"
 
         # 构建并返回DLModel对象
-        return mnist_pb2.DLModel(
+        return model_pb2.DLModel(
             name=model.__class__.__name__,
             path=model_path,
             status=status,
@@ -49,7 +49,7 @@ class DLfunctionServicer(mnist_pb2_grpc.DLfunctionServicer):
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    mnist_pb2_grpc.add_DLfunctionServicer_to_server(DLfunctionServicer(), server)
+    model_pb2_grpc.add_DLModelerServicer_to_server(DLModelerServicer(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()
