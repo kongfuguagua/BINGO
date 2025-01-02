@@ -1,5 +1,3 @@
-
-
 # BINGO
 
 本项目是zrpc跨语言的demo实验，希望结合go-zero脚手架的优异特性和python在深度学习应用中的丰富社区。我们在这个项目中使用api调用zrpc-client，然后使用grpc实现跨语言的调用，python实现的grpc客户端可以实现模型训练和推理。由于这可能将是我们后续的只是开始或者基石，所以我命名其为bingo,寓意begin + go = bingo.  
