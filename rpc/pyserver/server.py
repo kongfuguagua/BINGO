@@ -6,45 +6,45 @@ from  concurrent import futures
 import etcd3
 
 # 实现 proto 文件中定义的 SearchService
-class DLserver(dl_pb2_grpc.DLfunction):
+class DLserver(dl_pb2_grpc.DLfunctionServicer):
     # 实现 proto 文件中定义的 rpc 调用
-    def CreateDL(self, request, context):
+    def createDL(self, request, context):
         # 创建DLModel对象
         dl_model = dl_pb2.DLModel(
-            name=request.spec.model_name,
+            name=request.spec.modelName,
             path="",
             status=False,
-            input_type="",
-            output_type=""
+            inputType="",
+            outputType=""
         )
-        
+
         # 创建DLDataOBJ对象
         dl_data_obj = dl_pb2.DLDataOBJ(
-            database="",
+            Database="",
             name="",
             status=False,
             total=0,
-            data_type=""
+            type=""
         )
-        
+
         # 创建DLSpec对象
-        dl_spec = dl_pb2.DLSpec(dl_model, dl_data_obj)
-        
+        dl_spec = dl_pb2.DLSpec(model=dl_model, dataObj=dl_data_obj)
+
         # 生成UUID
         dl_id = "test"
-        
+
         # 创建DLMetadata对象
         dl_metadata = dl_pb2.DLMetadata(
             id=dl_id,
-            namespace=request.spec.namespace,
-            dl_name=request.spec.dl_name
+            Namespace=request.spec.Namespace,
+            DLName=request.spec.DLName
         )
-        
+
         # 创建DLapp对象
-        dl_app = dl_pb2.DLapp(dl_metadata, dl_spec)
-        
+        dl_app = dl_pb2.DLapp(metadata=dl_metadata, spec=dl_spec)
+
         # 返回DLCreateResponse对象
-        return dl_pb2.DLCreateResponse(dl_app=dl_app)
+        return dl_pb2.DLCreateResponse(dlApp=dl_app)
 
 def serve():
     # 启动 rpc 服务，这里可定义最大接收和发送大小(单位M)，默认只有4M

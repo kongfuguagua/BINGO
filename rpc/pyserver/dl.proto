@@ -73,7 +73,9 @@ message setDLDataRequest{
 
 service DLfunction {
     rpc getDLById (DLGetRequestById) returns (DLGetResponseById);
-    rpc createDL (DLCreateRequest) returns (DLCreateResponse);
+    rpc createDL (DLCreateRequest) returns (DLCreateResponse){
+        
+    };
     rpc initDL (DLapp) returns (DLapp);
 }
 
