@@ -61,17 +61,73 @@
 </p>
 
 快速开始！
+
+
+1启动etcd作为注册表
 ```
-1
 docker run  -it --rm -p 2379:2379   -p 2380:2380   --name etcd-gcr-v3.5.16   gcr.io/etcd-development/etcd:v3.5.16   /usr/local/bin/etcd   --name s1   --data-dir /etcd-data   --listen-client-urls http://0.0.0.0:2379   --advertise-client-urls http://0.0.0.0:2379   --listen-peer-urls http://0.0.0.0:2380   --initial-advertise-peer-urls http://0.0.0.0:2380   --initial-cluster s1=http://0.0.0.0:2380   --initial-cluster-token tkn   --initial-cluster-state new   --log-level info   --logger zap   --log-outputs stderr
-2
+```
+2启动rpc服务器，程序会自动注册，并启动监听
+```
 cd rpc/pyserver
 python server.py
-3
+```
+3启动api网关
+```
 cd api
 go run main.go -f etc/dl-api.yaml
 ```
-
+4测试demo
+```
+curl --location --request POST 'http://localhost:8888/dl/api/create' \
+--header 'User-Agent: Apifox/1.0.0 (https://apifox.com)' \
+--header 'Content-Type: application/json' \
+--header 'Accept: */*' \
+--header 'Host: localhost:8888' \
+--header 'Connection: keep-alive' \
+--data-raw '{
+    "namespace": "test",
+    "dlname": "mnist",
+    "spec": {
+        "dlmodel": {
+            "dlmodelname": "my-cnn",
+            "dlmodelpath": "/sbin",
+            "dlmodelstatus": true,
+            "dlinput": "3*24*24",
+            "dloutput": "4*24"
+        },
+        "dldataobj": {
+            "database": "mnist",
+            "name": "mnist",
+            "status": false,
+            "total": 23,
+            "type": "pic"
+        }
+    }
+}'
+```
+预期结果
+```
+{
+    "dlinfo": {
+        "metadata": {
+            "id": "test",
+            "namespace": "test",
+            "dlname": "test"
+        },
+        "spec": {
+            "dlmodel": {
+                "dlmodelname": "my-cnn",
+                "dlmodelpath": "",
+                "dlmodelstatus": false,
+                "dlinput": "",
+                "dloutput": ""
+            },
+            "dldataobj": {}
+        }
+    }
+}
+```
 ###### 开发前的配置要求
 
 1. python3.12
