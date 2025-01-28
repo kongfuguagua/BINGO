@@ -206,7 +206,7 @@ BINGO
 - [Domain-driven design](https://en.wikipedia.org/wiki/Domain-driven_design)
 - [go-zero](https://go-zero.dev/docs/concepts/overview)
 - [grpc-python](https://grpc.org.cn/docs/languages/python/basics/)
-coming!
+- [go-zero-demo](https://github.com/zeromicro/zero-doc/blob/main/docs/zero/bookstore.md)
 
 #### 如何参与开源项目
 
