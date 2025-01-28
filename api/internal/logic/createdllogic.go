@@ -5,6 +5,7 @@ import (
 
 	"dl/api/internal/svc"
 	"dl/api/internal/types"
+	"dl/db"
 	"dl/rpc/app/dlfunction"
 
 	"github.com/zeromicro/go-zero/core/logx"
@@ -34,6 +35,14 @@ func (l *CreateDLLogic) CreateDL(req *types.DLCreateRequest) (resp *types.DLCrea
 		Spec: spec,
 	}
 	dlinfo, err := l.svcCtx.DLclient.CreateDL(l.ctx, in)
+	if err != nil {
+		return nil, err
+	}
+	_, err = l.svcCtx.Model.Insert(l.ctx, &db.World{
+		ID:        dlinfo.DlApp.Metadata.Id,
+		Namespace: dlinfo.DlApp.Metadata.Namespace,
+		DLName:    dlinfo.DlApp.Metadata.DLName,
+	})
 	if err != nil {
 		return nil, err
 	}
