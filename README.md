@@ -52,7 +52,7 @@
 
 ### 上手指南
 
-本项目架构是 users->api->rpc Client(go)->rpc Server(python)->model
+本项目架构是 users->api->rpc Client(go)->etcd注册->rpc Server(python)->model
 <p align="center">
   <a href="https://github.com/kongfuguagua/BINGO/">
     <img src="device.png">
@@ -63,9 +63,19 @@
 快速开始！
 
 
-1启动etcd作为注册表
+1准备工作
+1.1启动etcd作为注册表
 ```
 docker run  -it --rm -p 2379:2379   -p 2380:2380   --name etcd-gcr-v3.5.16   gcr.io/etcd-development/etcd:v3.5.16   /usr/local/bin/etcd   --name s1   --data-dir /etcd-data   --listen-client-urls http://0.0.0.0:2379   --advertise-client-urls http://0.0.0.0:2379   --listen-peer-urls http://0.0.0.0:2380   --initial-advertise-peer-urls http://0.0.0.0:2380   --initial-cluster s1=http://0.0.0.0:2380   --initial-cluster-token tkn   --initial-cluster-state new   --log-level info   --logger zap   --log-outputs stderr
+```
+1.2创建数据库、导入数据表mysql
+```
+create database hello;
+source db/helloworld.sql;
+```
+1.3启动缓存数据库redis
+```
+docker run --restart=always --log-opt max-size=100m --log-opt max-file=2 -p 6379:6379 --name redis -d redis:latest
 ```
 2启动rpc服务器，程序会自动注册，并启动监听
 ```
@@ -128,6 +138,10 @@ curl --location --request POST 'http://localhost:8888/dl/api/create' \
     }
 }
 ```
+查看数据库会有新增记录
+```
+SELECT * FROM world LIMIT 100
+```
 ###### 开发前的配置要求
 
 1. python3.12
@@ -163,7 +177,7 @@ eg:
 ```
 BINGO 
 --api 是项目对外暴露的api和逻辑实现
---db  是项目数据库内容，coming！
+--db  是项目数据库内容
 --rpc 是项目的rpc定义和实现
 ```
 
