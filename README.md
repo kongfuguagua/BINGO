@@ -74,10 +74,6 @@ cd app/xxx
 create database hello;#如果有数据库可省略
 source task.sql;
 ```
-1.3启动缓存数据库redis
-```
-docker run --restart=always --log-opt max-size=100m --log-opt max-file=2 -p 6379:6379 --name redis -d redis:latest
-```
 2启动rpc服务器，程序会自动注册，并启动监听
 ```
 cd rpc/pyserver
