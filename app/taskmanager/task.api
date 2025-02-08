@@ -1,0 +1,150 @@
+syntax = "v1"
+
+info (
+	title: "测试任务管理api"
+	desc: "测试任务管理api"
+	author: "kongfuguagua"
+	email: "hanmengqi@sjtu.edu.cn"
+)
+//数据对象
+type (
+    sceneInfo struct {
+        Index       string   `json:"index"`
+        Type        string   `json:"type"`
+        Name        string   `json:"name"`
+        ModelMaster string   `json:"model_master"`
+        ModelSlave  []string `json:"model_slave"`
+        Algorithm   []string `json:"algorithm"`
+        Alarm       []string `json:"alarm"`
+    }
+
+    datasetInfo struct {
+        DatasetId   string     `json:"datasetId"`
+        DatasetName string     `json:"datasetName"`
+        Namespace   string     `json:"namespace"`
+        Dataset     []dataInfo `json:"dataset"`
+    }
+
+    dataInfo struct {
+        Url  string `json:"url"`
+        Name string `json:"name"`
+        Type string `json:"type"`
+        Label string `json:"label"`
+    }
+
+    taskMetaData struct {
+        TaskID         string `json:"taskID"`
+        TaskName       string `json:"taskName"`
+        CreateTimeStamp string `json:"createTimeStamp"`
+        CreateUser     string `json:"createUser"`
+    }
+)
+
+//create task
+type (
+    TaskCreateRequest struct {
+        Id          string      `json:"id"`
+        Name        string      `json:"name"`
+        SceneInfo   sceneInfo   `json:"sceneInfo"`
+        DatasetInfo datasetInfo `json:"datasetInfo"`
+        CreateUser  string      `json:"createUser"`
+    }
+
+    TaskCreateResponse struct {
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+    }
+)
+//delete task
+type (
+    TaskDeleteRequest struct {
+        Id string `json:"id"`
+    }
+
+    TaskDeleteResponse struct {
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+    }
+)
+//info task
+type (
+    TaskInfoRequest struct {
+        Id string `json:"id"`
+    }
+
+    TaskInfoResponse struct {
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+        Status       string       `json:"status"`
+    }
+)
+//start task
+type (
+    TaskStartRequest struct {
+        Id string `json:"id"`
+    }
+
+    TaskStartResponse struct {
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+        Status       string       `json:"status"`
+    }
+)
+//stop task
+type (
+    TaskStopRequest struct {
+        Id string `json:"id"`
+    }
+
+    TaskStopResponse struct {
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+        Status       string       `json:"status"`
+    }
+)
+//list task
+type (
+    TaskListResponse struct {
+        Tasks []taskInfo `json:"tasks"`
+    }
+
+    taskInfo struct {
+        Id          string      `json:"id"`
+        Name        string      `json:"name"`
+        SceneInfo   sceneInfo   `json:"sceneInfo"`
+        DatasetInfo datasetInfo `json:"datasetInfo"`
+        Status      string      `json:"status"`
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+    }
+)
+//update task
+type (
+    TaskUpdateRequest struct {
+        Id          string      `json:"id"`
+        Name        string      `json:"name"`
+        SceneInfo   sceneInfo   `json:"sceneInfo"`
+        DatasetInfo datasetInfo `json:"datasetInfo"`
+    }
+
+    TaskUpdateResponse struct {
+        TaskMetaData taskMetaData `json:"taskMetaData"`
+    }
+)
+
+service task-api {
+    @handler CreateTaskHandler
+    post /ana/testsystem/task/create (TaskCreateRequest) returns (TaskCreateResponse)
+
+    @handler DeleteTaskHandler
+    post /ana/testsystem/task/delete (TaskDeleteRequest) returns (TaskDeleteResponse)
+
+    @handler InfoTaskHandler
+    post /ana/testsystem/task/info (TaskInfoRequest) returns (TaskInfoResponse)
+
+    @handler StartTaskHandler
+    post /ana/testsystem/task/start (TaskStartRequest) returns (TaskStartResponse)
+
+    @handler StopTaskHandler
+    post /ana/testsystem/task/stop (TaskStopRequest) returns (TaskStopResponse)
+
+    @handler ListTaskHandler
+    post /ana/testsystem/task/list returns (TaskListResponse)
+
+    @handler UpdateTaskHandler
+    post /ana/testsystem/task/update (TaskUpdateRequest) returns (TaskUpdateResponse)
+}
