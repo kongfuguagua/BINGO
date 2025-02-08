@@ -36,7 +36,7 @@
 </p>
 
 
- 本篇README.md面向开发者
+ 本篇README.md面向安眼系统测试系统自定义组件开发者
  
 ## 目录
 
@@ -52,7 +52,7 @@
 
 ### 上手指南
 
-本项目架构是 users->api->rpc Client(go)->etcd注册->rpc Server(python)->model
+本项目请求架构是 users->api->rpc Client(go)->etcd注册(可省略)->rpc Server(python)->安眼系统
 <p align="center">
   <a href="https://github.com/kongfuguagua/BINGO/">
     <img src="device.png">
@@ -70,8 +70,9 @@ docker run  -it --rm -p 2379:2379   -p 2380:2380   --name etcd-gcr-v3.5.16   gcr
 ```
 1.2创建数据库、导入数据表mysql
 ```
-create database hello;
-source db/helloworld.sql;
+cd app/xxx
+create database hello;#如果有数据库可省略
+source task.sql;
 ```
 1.3启动缓存数据库redis
 ```
