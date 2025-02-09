@@ -21,7 +21,7 @@
 
   <h3 align="center">BINGO</h3>
   <p align="center">
-    RAG架构
+    安眼测试系统架构
     <br />
     <a href="https://github.com/kongfuguagua/BINGO"><strong>探索本项目的文档 »</strong></a>
     <br />
@@ -54,25 +54,28 @@
 
 本项目请求架构是 users->api->rpc Client(go)->etcd注册(可省略)->rpc Server(python)->安眼系统
 <p align="center">
-  <a href="https://github.com/kongfuguagua/BINGO/">
-    <img src="device.png">
+  <a href="https://github.com/kongfuguagua/BINGO/blob/ana_testsystem/workflow.png">
+    <img src="workflow.png">
   </a>
   </p>
 </p>
 
 快速开始！
 
-
 1准备工作
 1.1启动etcd作为注册表
 ```
 docker run  -it --rm -p 2379:2379   -p 2380:2380   --name etcd-gcr-v3.5.16   gcr.io/etcd-development/etcd:v3.5.16   /usr/local/bin/etcd   --name s1   --data-dir /etcd-data   --listen-client-urls http://0.0.0.0:2379   --advertise-client-urls http://0.0.0.0:2379   --listen-peer-urls http://0.0.0.0:2380   --initial-advertise-peer-urls http://0.0.0.0:2380   --initial-cluster s1=http://0.0.0.0:2380   --initial-cluster-token tkn   --initial-cluster-state new   --log-level info   --logger zap   --log-outputs stderr
 ```
-1.2创建数据库、导入数据表mysql
+1.2创建数据库、导入数据表mysql(第一次运行)
 ```
 cd app/xxx
 create database hello;#如果有数据库可省略
 source task.sql;
+```
+1.3启动安眼算法
+```
+略
 ```
 2启动rpc服务器，程序会自动注册，并启动监听
 ```
@@ -84,56 +87,7 @@ python server.py
 cd api
 go run main.go -f etc/dl-api.yaml
 ```
-4测试demo
-```
-curl --location --request POST 'http://localhost:8888/dl/api/create' \
---header 'User-Agent: Apifox/1.0.0 (https://apifox.com)' \
---header 'Content-Type: application/json' \
---header 'Accept: */*' \
---header 'Host: localhost:8888' \
---header 'Connection: keep-alive' \
---data-raw '{
-    "namespace": "test",
-    "dlname": "mnist",
-    "spec": {
-        "dlmodel": {
-            "dlmodelname": "my-cnn",
-            "dlmodelpath": "/sbin",
-            "dlmodelstatus": true,
-            "dlinput": "3*24*24",
-            "dloutput": "4*24"
-        },
-        "dldataobj": {
-            "database": "mnist",
-            "name": "mnist",
-            "status": false,
-            "total": 23,
-            "type": "pic"
-        }
-    }
-}'
-```
-预期结果
-```
-{
-    "dlinfo": {
-        "metadata": {
-            "id": "test",
-            "namespace": "test",
-            "dlname": "test"
-        },
-        "spec": {
-            "dlmodel": {
-                "dlmodelname": "my-cnn",
-                "dlmodelpath": "",
-                "dlmodelstatus": false,
-                "dlinput": "",
-                "dloutput": ""
-            },
-            "dldataobj": {}
-        }
-    }
-}
+4用户发送api指令
 ```
 查看数据库会有新增记录
 ```
@@ -146,7 +100,7 @@ SELECT * FROM world LIMIT 100
 3. golang1.22
 4. 参考mod.go
 
-###### **安装步骤**
+###### **开发步骤**
 
 1. Clone the repo
 
@@ -154,7 +108,40 @@ SELECT * FROM world LIMIT 100
 git clone https://github.com/kongfuguagua/BINGO.git
 ```
 
-2. Build the images (pass)
+1.1.修改API(taskmanager为例)
+
+```sh
+cd app/taskmanager
+修改api/task.api文件
+goctl api go -api api/task.api -dir .
+```
+之后修改对应函数即可
+
+1.2修改数据库表(taskmanager为例)
+
+```sh
+cd app/taskmanager
+修改model下sql文件
+goctl model mysql ddl -c -src task.sql -dir .
+```
+
+1.3修改rpc(outbound为例)
+
+```sh
+cd app/outbound/rpc
+修改rpc下outbound.proto文件
+goctl rpc protoc outbound.proto --go_out=. --go-grpc_out=. --zrpc_out=.
+```
+
+1.4跨语言调用(outbound为例)
+
+```sh
+cd app/outbound/rpc
+python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. --pyi_out=. outbound.proto
+编写python函数即可
+```
+
+2. Build the images
 
 ```sh
 cd ApplicationLibrary/xxx
@@ -173,28 +160,82 @@ eg:
 
 ```
 BINGO 
---api 是项目对外暴露的api和逻辑实现
---db  是项目数据库内容
---rpc 是项目的rpc定义和实现
+├── README.md
+├── app 组件父目录
+│   ├── taskmanager
+│   │   ├── api 
+│   │   │   └── task.api 接口定义文件
+│   │   ├── etc          配置文件
+│   │   │   └── task-api.yaml
+│   │   ├── internal     逻辑
+│   │   │   ├── config   配置参数
+│   │   │   │   └── config.go
+│   │   │   ├── handler  路由定义
+│   │   │   │   ├── createtaskhandler.go
+│   │   │   │   ├── deletetaskhandler.go
+│   │   │   │   ├── infotaskhandler.go
+│   │   │   │   ├── listtaskhandler.go
+│   │   │   │   ├── routes.go
+│   │   │   │   ├── starttaskhandler.go
+│   │   │   │   ├── stoptaskhandler.go
+│   │   │   │   └── updatetaskhandler.go
+│   │   │   ├── logic    api逻辑函数
+│   │   │   │   ├── createtasklogic.go
+│   │   │   │   ├── deletetasklogic.go
+│   │   │   │   ├── infotasklogic.go
+│   │   │   │   ├── listtasklogic.go
+│   │   │   │   ├── starttasklogic.go
+│   │   │   │   ├── stoptasklogic.go
+│   │   │   │   └── updatetasklogic.go
+│   │   │   ├── svc      上下文信息
+│   │   │   │   └── servicecontext.go
+│   │   │   └── types    数据类型定义
+│   │   │       └── types.go
+│   │   ├── model        数据库对象
+│   │   │   ├── task.sql 数据库表结构
+│   │   │   ├── taskmodel.go
+│   │   │   ├── taskmodel_gen.go
+│   │   │   └── vars.go
+│   │   └── task.go      入口函数
+│   ├── outbound 
+│   │   ├── model 数据库对象
+│   │   └── rpc
+│   │       ├── anamodel.proto rpc定义文件
+│   │       └── pyserver          python对应项目
+│   │           ├── __pycache__
+│   │           │   ├── dl_pb2.cpython-312.pyc
+│   │           │   └── dl_pb2_grpc.cpython-312.pyc
+│   │           ├── dl.proto
+│   │           ├── dl_pb2.py
+│   │           ├── dl_pb2.pyi
+│   │           ├── dl_pb2_grpc.py
+│   │           ├── requirements.txt
+│   │           └── server.py
+│   ├── datasetmanager 略
+│   ├── modelmanager 略
+│   ├── reportmanager 略
+│   ├── scripts 脚本文件夹，如Makefile Dockerfile等
+│   └── utils   通用函数
+├── go.mod
+├── go.sum
+├── scripts
+│   ├── Dockerfile
+│   └── Makefile
 ```
 
 
 
 ### Demo 
 
-一个深度学习应用调用流程如下：
+一个测试任务启动流程如下：
 
 <p align="center">
-  <a href="https://github.com/kongfuguagua/BINGO/blob/main/energy.png">
+  <a href="https://github.com/kongfuguagua/BINGO/blob/ana_testsystem/testflow.png">
     <img src="energy.png">
-  </a>
-  <a href="https://github.com/kongfuguagua/BINGO/blob/main/diagram.png">
-    <img src="diagram.png">
   </a>
   </p>
 </p>
 
-涉及模块均可以在xxx找到，主要包括自编码器、微调大模型数据集等
 
 
 
@@ -205,9 +246,7 @@ BINGO
 - [grpc-python](https://grpc.org.cn/docs/languages/python/basics/)
 - [go-zero-demo](https://github.com/zeromicro/zero-doc/blob/main/docs/zero/bookstore.md)
 
-#### 如何参与开源项目
-
-贡献使开源社区成为一个学习、激励和创造的绝佳场所。你所作的任何贡献都是**非常感谢**的。
+#### 如何参与项目
 
 
 1. Fork the Project
@@ -221,10 +260,6 @@ BINGO
 
 a25505597703@gmail.com  
 
-
-### 版权说明
-
-该项目签署了MIT 授权许可，详情请参阅 [LICENSE.txt](https://github.com/kongfuguagua/BINGO/blob/master/LICENSE.txt)
 
 ### 鸣谢
 
