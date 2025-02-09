@@ -1,0 +1,165 @@
+syntax = "proto3";
+
+package outbound;
+
+message sceneInfo {
+    string Index = 1;
+    string Type = 2;
+    string Name = 3;
+    string ModelMaster = 4;
+    repeated string ModelSlave = 5;
+    repeated string Algorithm = 6;
+    repeated string Alarm = 7;
+}
+
+message datasetInfo {
+    string DatasetId = 1;
+    string DatasetName = 2;
+    string Namespace = 3;
+    repeated dataInfo Datas = 4;
+}
+
+message dataInfo {
+    string Url = 1;
+    string Name = 2;
+    string Type = 3;
+    string Label = 4;
+}
+
+message resultInfo {
+    dataInfo data = 1;
+    string result = 2;
+}
+
+message reportInfo {
+    string reportId = 1;
+    string reportName = 2;
+    string reportUrl = 3;
+}
+
+message modelInfo {
+    string index = 1;
+    string type = 2;
+    int32 maxVideos = 3;
+    Plugin plugin = 4;
+}
+
+message Plugin {
+    MxpiPreProcessor mxpiPreProcessor = 1;
+    MxpiTensorInfer mxpiTensorInfer = 2;
+    MxpiPostProcessor mxpiPostProcessor = 3;
+}
+
+message MxpiPreProcessor {
+    MxpiSkipFrame mxpiSkipFrame = 1;
+    MxpiImageResize mxpiImageResize = 2;
+}
+
+message MxpiSkipFrame {
+    int32 frameNum = 1;
+}
+
+message MxpiImageResize {
+    int32 resizeHeight = 1;
+    int32 resizeWidth = 2;
+    string dataSource = 3;
+}
+
+message MxpiTensorInfer {
+    string modelPath = 1;
+}
+
+message MxpiPostProcessor {
+    ObjectPostProcessor objectPostProcessor = 1;
+}
+
+message ObjectPostProcessor {
+    string postProcessConfigPath = 1;
+    string postProcessLibPath = 2;
+    string labelPath = 3;
+}
+
+message CreateModelRequest {
+    modelInfo modelInfo=1；
+}
+
+message CreateModelResponse {
+    modelInfo modelInfo=1；
+    string status = 2;
+}
+
+message GetModelRequest {
+    string index = 1;
+}
+
+message GetModelResponse {
+    modelInfo modelInfo=1；
+}
+
+message CreateSceneRequest {
+    sceneInfo scene = 1;
+}
+
+message CreateSceneResponse {
+    sceneInfo scene = 1;
+    string status = 2;
+}
+
+message GetSceneRequest {
+    string sceneId = 1;
+}
+
+message GetSceneResponse {
+    sceneInfo scene = 1;
+    string status = 2;
+}
+
+message SendDataRequest {
+    string sceneId = 1;
+    dataInfo data = 1;
+}
+
+message SendDataResponse {
+    string status = 1;
+}
+
+message GetResultRequest {
+    string sceneId = 1;
+    dataInfo data = 1;;
+}
+
+message GetResultResponse {
+    resultInfo result = 1;
+    string status = 2;
+}
+
+message ExportReportRequest {
+    string sceneId = 1;
+}
+
+message ExportReportResponse {
+    reportInfo reportInfo=1;
+    string status = 2;
+}
+
+message GetReportRequest {
+    string reportId = 1;
+}
+
+message GetReportResponse {
+    reportInfo report = 1;
+    string status = 2;
+}
+
+service Outbound {
+    rpc createModel (CreateModelRequest) returns (CreateModelResponse);
+    rpc getModel (GetModelRequest) returns (GetModelResponse);
+    rpc createScene (CreateSceneRequest) returns (CreateSceneResponse);
+    rpc getScene (GetSceneRequest) returns (GetSceneResponse);
+    rpc sendData (SendDataRequest) returns (SendDataResponse);
+    rpc getResult (GetResultRequest) returns (GetResultResponse);
+    rpc exportReport (ExportReportRequest) returns (ExportReportResponse);
+    rpc getReport (GetReportRequest) returns (GetReportResponse);
+}
+
+
