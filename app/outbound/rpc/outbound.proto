@@ -80,11 +80,11 @@ message ObjectPostProcessor {
 }
 
 message CreateModelRequest {
-    modelInfo modelInfo=1；
+    modelInfo modelInfo = 1;
 }
 
 message CreateModelResponse {
-    modelInfo modelInfo=1；
+    modelInfo modelInfo = 1;
     string status = 2;
 }
 
@@ -93,7 +93,7 @@ message GetModelRequest {
 }
 
 message GetModelResponse {
-    modelInfo modelInfo=1；
+    modelInfo modelInfo = 1;
 }
 
 message CreateSceneRequest {
@@ -116,7 +116,7 @@ message GetSceneResponse {
 
 message SendDataRequest {
     string sceneId = 1;
-    dataInfo data = 1;
+    dataInfo data = 2;
 }
 
 message SendDataResponse {
@@ -125,7 +125,7 @@ message SendDataResponse {
 
 message GetResultRequest {
     string sceneId = 1;
-    dataInfo data = 1;;
+    dataInfo data = 2;
 }
 
 message GetResultResponse {
