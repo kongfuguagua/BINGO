@@ -75,7 +75,7 @@ python server.py
 3启动api网关
 ```
 cd api
-go run main.go -f etc/dl-api.yaml
+go run dl.go -f etc/dl-api.yaml
 ```
 4测试demo
 ```
