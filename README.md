@@ -40,19 +40,22 @@
  
 ## 目录
 
-- [上手指南](#上手指南)
-  - [开发前的配置要求](#开发前的配置要求)
-  - [安装步骤](#安装步骤)
-- [文件目录说明](#文件目录说明)
-- [Demo](#Demo)
-- [使用到的框架](#使用到的框架)
-- [版本控制](#版本控制)
-- [作者](#作者)
-- [鸣谢](#鸣谢)
+- [BINGO](#bingo)
+  - [目录](#目录)
+    - [上手指南](#上手指南)
+          - [开发前的配置要求](#开发前的配置要求)
+          - [**安装步骤**](#安装步骤)
+    - [文件目录说明](#文件目录说明)
+    - [Demo](#demo)
+    - [使用到的框架](#使用到的框架)
+      - [如何参与开源项目](#如何参与开源项目)
+    - [作者](#作者)
+    - [版权说明](#版权说明)
+    - [鸣谢](#鸣谢)
 
 ### 上手指南
 
-本项目架构是 users->api->rpc Client(go)->rpc Server(python)->model
+本项目架构是 users->api->rpc Client(go)->rpc Server(python/java)->model
 <p align="center">
   <a href="https://github.com/kongfuguagua/BINGO/">
     <img src="device.png">
@@ -67,16 +70,30 @@
 ```
 docker run  -it --rm -p 2379:2379   -p 2380:2380   --name etcd-gcr-v3.5.16   gcr.io/etcd-development/etcd:v3.5.16   /usr/local/bin/etcd   --name s1   --data-dir /etcd-data   --listen-client-urls http://0.0.0.0:2379   --advertise-client-urls http://0.0.0.0:2379   --listen-peer-urls http://0.0.0.0:2380   --initial-advertise-peer-urls http://0.0.0.0:2380   --initial-cluster s1=http://0.0.0.0:2380   --initial-cluster-token tkn   --initial-cluster-state new   --log-level info   --logger zap   --log-outputs stderr
 ```
-2启动rpc服务器，程序会自动注册，并启动监听
-```
+
+2启动rpc服务器（选择以下任一服务器即可）：
+
+Python服务器：
+```bash
 cd rpc/pyserver
 python server.py
 ```
+
+Java服务器：
+```bash
+cd rpc/javaserver
+# 编译并打包
+mvn clean package
+# 运行服务器
+java -jar target/app-1.0-SNAPSHOT-jar-with-dependencies.jar
+```
+
 3启动api网关
 ```
 cd api
 go run dl.go -f etc/dl-api.yaml
 ```
+
 4测试demo
 ```
 curl --location --request POST 'http://localhost:8888/dl/api/create' \
@@ -134,6 +151,8 @@ curl --location --request POST 'http://localhost:8888/dl/api/create' \
 2. 参考requirements
 3. golang1.22
 4. 参考mod.go
+5. JDK 11+
+6. Maven 3.6+
 
 ###### **安装步骤**
 
