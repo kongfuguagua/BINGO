@@ -4,7 +4,13 @@ import io.etcd.jetcd.ByteSequence;
 import io.etcd.jetcd.Client;
 import io.etcd.jetcd.lease.LeaseGrantResponse;
 import io.etcd.jetcd.options.PutOption;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
+import io.grpc.LoadBalancerProvider;
+import io.grpc.LoadBalancerRegistry;
+import io.grpc.internal.PickFirstLoadBalancerProvider;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
 
@@ -12,17 +18,20 @@ import java.util.concurrent.ExecutionException;
  * 示例Java应用程序
  */
 public class App {
+    private static final int PORT = 50051;
+    private static Server server;
+    
     public static void main(String[] args) {
-        System.out.println("你好，世界！");
-        
         try {
+            // 启动gRPC服务器
+            startServer();
+            
             // 注册服务到etcd
             registerService();
             
-            // 保持服务运行
-            while (true) {
-                System.out.println("服务运行中...");
-                Thread.sleep(5000); // 每5秒打印一次
+            // 等待服务器终止
+            if (server != null) {
+                server.awaitTermination();
             }
         } catch (Exception e) {
             System.err.println("服务运行出错: " + e.getMessage());
@@ -31,15 +40,40 @@ public class App {
     }
 
     /**
+     * 启动gRPC服务器
+     */
+    private static void startServer() throws IOException {
+        server = ServerBuilder.forPort(PORT)
+            .addService(new DLFunctionImpl())
+            .build()
+            .start();
+            
+        System.out.println("gRPC服务器启动，监听端口: " + PORT);
+        
+        // 添加关闭钩子
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            System.out.println("*** 正在关闭gRPC服务器 ***");
+            if (server != null) {
+                server.shutdown();
+            }
+            System.out.println("*** gRPC服务器已关闭 ***");
+        }));
+    }
+
+    /**
      * 将服务注册到etcd
      */
     private static void registerService() throws ExecutionException, InterruptedException {
+        // 手动注册PickFirst负载均衡器提供者
+        LoadBalancerRegistry.getDefaultRegistry().register(new PickFirstLoadBalancerProvider());
+        System.out.println("已注册PickFirst负载均衡器提供者");
+        
         // 创建etcd客户端
         Client etcdClient = Client.builder().endpoints("http://127.0.0.1:2379").build();
         
         // 服务信息
         String serverIp = "127.0.0.1";
-        int serverPort = 8080;
+        int serverPort = PORT;
         
         // 创建租约（600秒，与Python示例相同）
         LeaseGrantResponse leaseResponse = etcdClient.getLeaseClient().grant(600).get();
