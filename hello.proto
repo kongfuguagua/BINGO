@@ -1,0 +1,18 @@
+// protobuf版本
+syntax = "proto3";
+
+// rpc请求的定义
+message HelloRequest {
+  optional string name = 1;
+}
+
+// rpc响应的定义
+message HelloReply {
+  optional string message = 1;
+}
+
+// rpc服务的定义，两个函数
+service HelloWorld {
+  rpc SayHello (HelloRequest) returns (HelloReply) {}
+  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+}
