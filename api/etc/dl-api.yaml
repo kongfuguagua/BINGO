@@ -6,3 +6,16 @@ DLApp:
     Hosts:
       - localhost:2379
     Key: dl.rpc
+KqPusherConf:
+  Brokers:
+    - 192.168.3.151:9092
+  Topic: test_kq
+
+KqConsumerConf:
+  Name: kqConsumer
+  Brokers:
+    - 192.168.3.151:9092
+  Group: test
+  Topic: test_kq
+  Offset: last
+  Consumers: 1

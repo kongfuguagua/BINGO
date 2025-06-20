@@ -1,10 +1,10 @@
 syntax = "v1"
 
 info (
-	title: "深度学习微服务"
-	desc: "深度学习微服务"
+	title:  "深度学习微服务"
+	desc:   "深度学习微服务"
 	author: "kongfuguagua"
-	email: "hanmengqi@sjtu.edu.cn"
+	email:  "hanmengqi@sjtu.edu.cn"
 )
 
 type (
@@ -28,7 +28,6 @@ type (
 		InputType  string `json:"dlinput,omitempty"`
 		OutputType string `json:"dloutput,omitempty"`
 	}
-
 	DLDataOBJ {
 		Database string `json:"database,omitempty"`
 		Name     string `json:"name,omitempty"`
@@ -36,11 +35,10 @@ type (
 		Total    int64  `json:"total,omitempty"`
 		Type     string `json:"type,omitempty"`
 	}
-
 	DLData {
 		Index  string `json:"index,omitempty"`
 		Status bool   `json:"status,omitempty"` // 该数据是否可用
-		Deal   string `json:"deal,omitempty"`   // 该数据结束到哪个流程了，后面这个要变成枚举
+		Deal   string `json:"deal,omitempty"` // 该数据结束到哪个流程了，后面这个要变成枚举
 	}
 )
 
@@ -64,10 +62,23 @@ type (
 	}
 )
 
+type (
+	kafkaPusherRequest {
+		Data string `json:"data"`
+	}
+	kafkaPusherResponse {
+		Result string `json:"result"`
+	}
+)
+
 service dl-api {
 	@handler GetDLHandler // TODO: set handler name and delete this comment
-	get /dl/api/get (DLGetRequest) returns(DLGetResponse)
-	
+	get /dl/api/get (DLGetRequest) returns (DLGetResponse)
+
 	@handler CreateDLHandler // TODO: set handler name and delete this comment
 	post /dl/api/create (DLCreateRequest) returns (DLCreateResponse)
+
+	@handler KafkaPusherHandler
+	post /dl/api/kafka/pusher (kafkaPusherRequest) returns (kafkaPusherResponse)
 }
+
