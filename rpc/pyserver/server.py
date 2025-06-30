@@ -4,6 +4,7 @@ import grpc
 import dl_pb2,dl_pb2_grpc
 from  concurrent import futures
 import etcd3
+
 # 实现 proto 文件中定义的 SearchService
 class DLserver(dl_pb2_grpc.DLfunctionServicer):
     # 实现 proto 文件中定义的 rpc 调用
@@ -52,12 +53,11 @@ def serve():
         ('grpc.max_receive_message_length', 100 * 1024 * 1024)])
     
     dl_pb2_grpc.add_DLfunctionServicer_to_server(DLserver(), server)
-    server.add_insecure_port('127.0.0.1:50051')
+    server.add_insecure_port('0.0.0.0:5051')
     server.start()
     # etcdClient=etcd3.client()
     # server_ip='127.0.0.1'
     # server_port=50051
-    # etcdClient.put(key='dl.rpc/3424113',value=f'{server_ip}:{server_port}')
     register()
     while True:
         try:
@@ -67,10 +67,11 @@ def serve():
             print(e)
 
 def register():
-    etcdClient=etcd3.client.Client()
-    server_ip = '127.0.0.1'
-    server_port = 50051
-    lease=etcdClient.Lease(600)
+    etcdClient = etcd3.client(host='192.168.3.61', port=2379)
+    # 硬编码
+    server_ip = '192.168.3.61'
+    server_port = 5051
+    lease=etcdClient.lease(600)
     key = f'dl.rpc/{10}'
     value = f'{server_ip}:{server_port}'
     etcdClient.put(key, value)

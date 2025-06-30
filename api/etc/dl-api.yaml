@@ -4,10 +4,10 @@ Port: 8888
 DLApp:
   Etcd:
     Hosts:
-      - localhost:2379
+      - 192.168.3.61:2379   # 修改为etcd容器名:端口
     Key: dl.rpc
-DataSource: root:Iwin-1-321@tcp(localhost:3306)/hello?charset=utf8mb4&parseTime=true&loc=Local
+DataSource: root:Iwin-1-321@tcp(192.168.3.61:3308)/hello?charset=utf8mb4&parseTime=true&loc=Local
 # mysql链接地址，满足 $user:$password@tcp($ip:$port)/$db?$queries 格式即可
 Table: world
 Cache:
-  - Host: localhost:6379
+  - Host: 192.168.3.61:6379   # 修改为redis容器名:端口
