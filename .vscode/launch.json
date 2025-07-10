@@ -9,8 +9,8 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "C:/Users/a2550/Desktop/luchen/dl_mc/api/dl.go",
-            "args": ["-f", "C:/Users/a2550/Desktop/luchen/dl_mc/api/etc/dl-api.yaml"]
+            "program": "C:/Users/a2550/Desktop/luchen/dl_mc/rpc/app/dl.go",
+            "args": ["-f", "C:/Users/a2550/Desktop/luchen/dl_mc/rpc/app/etc/dl.yaml"]
         }
     ]
 }

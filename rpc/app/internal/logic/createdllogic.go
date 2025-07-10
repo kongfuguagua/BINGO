@@ -25,6 +25,8 @@ func NewCreateDLLogic(ctx context.Context, svcCtx *svc.ServiceContext) *CreateDL
 }
 
 func (l *CreateDLLogic) CreateDL(in *dl.DLCreateRequest) (*dl.DLCreateResponse, error) {
+	l.svcCtx.ZEtcdClient.Publish(in.Spec.Namespace, in.Spec.DLName)
+
 	DLModel := dl.DLModel{
 		Name:       in.Spec.ModelName,
 		Path:       "",

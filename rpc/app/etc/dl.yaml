@@ -4,3 +4,6 @@ Etcd:
   Hosts:
   - 127.0.0.1:2379
   Key: dl.rpc
+
+EtcdHosts:  # Deprecated, use Hosts instead
+  - 127.0.0.1:2379

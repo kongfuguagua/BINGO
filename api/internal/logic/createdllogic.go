@@ -37,6 +37,9 @@ func (l *CreateDLLogic) CreateDL(req *types.DLCreateRequest) (resp *types.DLCrea
 	if err != nil {
 		return nil, err
 	}
+	//new etcd-client
+	// c.put(xxx)
+
 	// dlmodel, err := l.svcCtx.DLmodeler.InitDLModel(l.ctx, &dlmodeler.SetDLModelRequest{Path: dlinfo.DlApp.Spec.Model.Path})
 	out := &types.DLCreateResponse{
 		DLInfo: types.DLApp{
